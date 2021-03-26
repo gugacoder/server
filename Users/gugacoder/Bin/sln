@@ -1,0 +1,108 @@
+#!/bin/bash
+
+this=$0
+verb=$1
+proj=$2
+
+print_help()
+{
+  echo "Utilitário de edição de soluções do VisualStudio."
+  echo "Syntax"
+  echo "  ${this} [ add | remove ] PROJECT"
+  echo "  ${this} clean"
+  echo "Parâmetros"
+  echo "  add"
+  echo "        Adiciona um projeto à solução corrente."
+  echo "  remove"
+  echo "        Remove um projeto da solução corrente."
+  echo "  clean"
+  echo "        Remove pastas 'bin' e 'obj'."
+  echo "  PROJECT"
+  echo "        Nome do arquivo do projeto (*.csproj, *.vdproj, etc)"
+  echo "Example"
+  echo "  ${this} add my.csproj"
+}
+
+detect_solution()
+{
+  sln=$(find . -name "*.sln" -depth 1 | head -1)
+  if [ -z "${sln}" ]; then sln=$(find .. -name "*.sln" -maxdepth 1 | head -1); fi 2> /dev/null
+  if [ -z "${sln}" ]; then sln=$(find ../.. -name "*.sln" -maxdepth 1 | head -1); fi 2> /dev/null
+  if [ -z "${sln}" ]; then sln=$(find ../../.. -name "*.sln" -maxdepth 1 | head -1 ); fi 2> /dev/null
+  if [ -z "${sln}" ]; then sln=$(find ../../../.. -name "*.sln" -maxdepth 1 | head -1 ); fi 2> /dev/null
+  if [ -z "${sln}" ]; then sln=$(find ../../../../.. -name "*.sln" -maxdepth 1 | head -1 ); fi 2> /dev/null
+  if [ -z "${sln}" ]; then sln=""; fi
+  echo ${sln}
+}
+
+clean_solution()
+{
+  echo "[INFO]Searching for solution..."
+  sln=$(detect_solution)
+  
+  if [ -z "${sln}" ]; then
+    echo "[ERR]SOLUTION NOT FOUND"
+    echo "  Could not sln a solution in the parent hierarchy."
+    exit 1
+  fi
+  
+  echo "[INFO]find . -type d -name obj | xargs -I{} rm -rf {}"
+  find . -type d -name obj | xargs -I{} rm -rf {}
+
+  echo "[INFO]find . -type d -name bin | xargs -I{} rm -rf {}"
+  find . -type d -name bin | xargs -I{} rm -rf {}
+
+  echo "[OK]Arquivos 'bin' e 'obj' removidos."
+}
+
+edit_solution()
+{ 
+  if [ -z "${proj}" ]; then
+    echo "[ERR]INVALID USAGE!"
+    echo "  Project sln not set."
+    print_help
+    exit 1
+  fi
+  
+  echo "[INFO]Searching for solution..."
+  sln=$(detect_solution)
+  
+  if [ -z "${sln}" ]; then
+    echo "[ERR]SOLUTION NOT FOUND"
+    echo "  Could not sln a solution in the parent hierarchy."
+    exit 1
+  fi
+  
+  echo "Found:"
+  echo "  SOLUCAO: ${sln}"
+  echo "  PROJETO: ${proj}"
+  
+  cmd="dotnet sln ${sln} ${verb} ${proj}"
+  echo "[CMD]${cmd}"
+  $cmd
+}
+
+fail() {
+  echo "[ERR]INVALID USAGE!"
+  echo "  Command not supported: ${verb}"
+  echo "  Para mais detalhes use: "
+  echo "    ${this} --help"
+}
+
+if [ "${verb}" == "-h" ] || [ "${verb}" == "--help" ] || [ "${verb}" == "help" ] || [ "${verb}" == "-?" ]; then
+  print_help
+  exit
+fi
+
+if [ "${verb}" == "clean" ]; then
+  clean_solution
+  exit
+fi
+
+if [ "${verb}" == "add" ] || [ "${verb}" == "remove" ]; then
+  edit_solution
+  exit
+fi
+
+fail()
+exit 1
