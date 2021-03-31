@@ -1,0 +1,21 @@
+select * from mlogic.TBintegracao_caixa                    ;
+select * from mlogic.TBintegracao_sessao                   ;
+select * from mlogic.TBintegracao_cesta_basica_cupom       ;
+select * from mlogic.TBintegracao_comprovante_nao_fiscal   ;
+select * from mlogic.TBintegracao_correspondente_bancario  ;
+select * from mlogic.TBintegracao_cupom_fiscal             ;
+select * from mlogic.TBintegracao_cupom_fiscal_eletronico  ;
+select * from mlogic.TBintegracao_dados_tef_dedicado       ;
+select * from mlogic.TBintegracao_devolucao                ;
+select * from mlogic.TBintegracao_documento_nao_fiscal     ;
+select * from mlogic.TBintegracao_forma_pagamento_efetuada ;
+select * from mlogic.TBintegracao_item_cesta_basica_cupom  ;
+select * from mlogic.TBintegracao_item_cupom_fiscal        ;
+select * from mlogic.TBintegracao_item_devolucao           ;
+select * from mlogic.TBintegracao_movimento_diario         ;
+select * from mlogic.TBintegracao_pagamento_tef            ;
+select * from mlogic.TBintegracao_recarga_celular          ;
+select * from mlogic.TBintegracao_retorno_sefaz            ;
+select * from mlogic.TBintegracao_sangria                  ;
+select * from mlogic.TBintegracao_suprimento               ;
+
