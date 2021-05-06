@@ -10,6 +10,8 @@ alias wget-all='wget --recursive --no-parent --no-host-directories'
 alias grep='grep --color=always'
 alias ?='grep --color=always'
 alias ??='grep -iRI --color=always'
+alias ?-='grep -v --color=always'
+alias ??-='grep -viRI --color=always'
 
 alias iargs='xargs -I{}'
 
